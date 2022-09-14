@@ -11,12 +11,15 @@ namespace ATM.Bank.Domein.Data.Domein
     public class Context:DbContext,IContext
     {
         public DbSet<User> user { get; set; }
-       
+        public DbSet<Bill> bill { get; set; }
+
+
 
         public Context(DbContextOptions<Context> options) : base(options)
         {
 
         }
+        
 
 
     } 

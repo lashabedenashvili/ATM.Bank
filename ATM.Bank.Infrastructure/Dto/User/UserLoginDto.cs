@@ -4,14 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ATM.Bank.Infrastructure.Dto
+namespace ATM.Bank.Infrastructure.Dto.User
 {
-    public class UserRegistrationDto
-    {    
-        public string Name { get; set; }
-       
-        public string Surname { get; set; }
-  
+    public class UserLoginDto
+    {
         public string PersonalNumber { get; set; }
+        public string Password { get; set; }
     }
 }

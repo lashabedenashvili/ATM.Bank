@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using ATM.Bank.Infrastructure.AutoMapper.UserAutoMaperConfiguration;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,9 @@ namespace ATM.Bank.Infrastructure.AutoMapper
 {
     public class AutoMapperProfile:Profile
     {
-
+        public AutoMapperProfile()
+        {
+            new UserAutoMapperConfiguration();
+        }
     }
 }

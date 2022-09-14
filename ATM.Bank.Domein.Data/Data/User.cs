@@ -15,13 +15,12 @@ namespace ATM.Bank.Domein.Data.Data
         public string Name { get; set; }
         [Required]
         [MaxLength(50)]
+
         public string Surname { get; set; }
-        [Required]
-        [MaxLength(15)]
+        
         public string PersonalNumber { get; set; }
-
         public byte[] PasswordHash { get; set; }
-
         public byte[] PasswordSalt { get; set; }
+        List<Bill> bill { get; set; } = new List<Bill>();
     }
 }

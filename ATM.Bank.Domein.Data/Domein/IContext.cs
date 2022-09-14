@@ -10,7 +10,9 @@ namespace ATM.Bank.Domein.Data.Domein
 {
     public interface IContext
     {
-        DbSet<User> user { get; set; }
-        public int SaveChanges();
+        public DbSet<User> user { get; set; }
+        public DbSet<Bill> bill { get; set; }
+
+        int SaveChanges();
     }
 }

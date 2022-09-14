@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ATM.Bank.Domein.Data\ATM.Bank.Domein.Data.csproj" />
+    <ProjectReference Include="..\ATM.Bank.Infrastructure\ATM.Bank.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
