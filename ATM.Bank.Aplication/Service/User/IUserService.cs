@@ -1,5 +1,5 @@
 ﻿using ATM.Bank.Domein.Data.Data;
-using ATM.Bank.Infrastructure.Dto.User;
+using ATM.Bank.Infrastructure.Dto.UserRegistration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +11,7 @@ namespace ATM.Bank.Aplication.Service
 {
     public interface IUserService
     {
-        Task<ServiceResponce<string>> Registration(User request, string password);
-        Task<ServiceResponce<string>> LogIn(UserLoginDto request);
-        Task<ServiceResponce<string>> UpdatePassword(UserPasswordChangeDto request);
-        Task<ServiceResponce<List<GetUserInfoDto>>> GetUserInformation();
-        Task<ServiceResponce<int>> GetUserIdByPersonalNumber(string personalNumber);
+      
+       Task<ServiceResponce<string>> UserRegistratiion(UserRegistrationDto request);
     }
 }

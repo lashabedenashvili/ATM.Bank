@@ -1,6 +1,8 @@
-﻿using System;
+﻿using ATM.Bank.Domein.Data.Enum;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,12 +17,15 @@ namespace ATM.Bank.Domein.Data.Data
         public string Name { get; set; }
         [Required]
         [MaxLength(50)]
-
-        public string Surname { get; set; }
-        
-        public string PersonalNumber { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
-        List<Bill> bill { get; set; } = new List<Bill>();
+        public string Surname { get; set; }              
+        [Required]
+        [Column(TypeName = "date")]
+        public DateTime BirthDate { get; set; }
+        [Required]
+        public Gender Gender { get; set; }
+        public List<Bill> bill { get; set; } = new();
+        public List<ContactInformation> ContactInformation { get; set; } = new();
+        public List<PrivateInformation> PrivateInformation { get; set; } = new();
+        public List<Address> Address { get; set; } = new();
     }
 }

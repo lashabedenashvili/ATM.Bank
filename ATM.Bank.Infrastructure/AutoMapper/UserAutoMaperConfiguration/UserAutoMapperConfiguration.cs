@@ -1,5 +1,6 @@
 ﻿using ATM.Bank.Domein.Data.Data;
 using ATM.Bank.Infrastructure.Dto;
+using ATM.Bank.Infrastructure.Dto.UserRegistration;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,11 @@ namespace ATM.Bank.Infrastructure.AutoMapper.UserAutoMaperConfiguration
     {
         public UserAutoMapperConfiguration()
         {
-            CreateMap<UserRegistrationDto, User>()
-                .ForMember(x => x.PasswordHash, c => c.Ignore())
-                .ForMember(x => x.PasswordSalt, c => c.Ignore())
-                .ForMember(x => x.ID, c => c.Ignore())
-                .ForSourceMember(x => x.Password, c => c.DoNotValidate());
+            CreateMap<UserRegistrationDto,User>();
+            CreateMap<UserRegistrationDto, ContactInformation>();
+            CreateMap<UserRegistrationDto, PrivateInformation>();
+            CreateMap<UserRegistrationDto, Address>();
+            
         }
     }
 }

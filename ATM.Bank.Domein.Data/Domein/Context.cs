@@ -12,8 +12,9 @@ namespace ATM.Bank.Domein.Data.Domein
     {
         public DbSet<User> user { get; set; }
         public DbSet<Bill> bill { get; set; }
-
-
+        public DbSet<Address> address { get; set; }
+        public DbSet<ContactInformation> contactInformation { get; set; }
+        public DbSet<PrivateInformation> privateInformation { get; set ; }
 
         public Context(DbContextOptions<Context> options) : base(options)
         {
