@@ -1,4 +1,5 @@
 ﻿using ATM.Bank.Aplication.Service;
+using ATM.Bank.Aplication.Service.BillServ;
 using ATM.Bank.Domein.Data.Data;
 using ATM.Bank.Infrastructure.Dto;
 using ATM.Bank.Infrastructure.Dto.UserRegistration;
@@ -14,11 +15,13 @@ namespace ATM.Bank.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
+        private readonly IBillService _billService;
 
-        public UserController(IMapper mapper, IUserService userService)
+        public UserController(IMapper mapper, IUserService userService,IBillService billService)
         {
             _mapper = mapper;
             _userService = userService;
+            _billService = billService;
         }
         [HttpPost("UserRegistration")]
         public async Task<ActionResult<ServiceResponce<string>>> UserRegistratiion(UserRegistrationDto request)
@@ -36,6 +39,12 @@ namespace ATM.Bank.Controllers
         public async Task<ActionResult<ServiceResponce<string>>> UpdateUser(UserUpdateDto request)
         {
             return Ok(await _userService.UserUpdate(request));
+        }
+
+        [HttpPost("AddBillNumber")]
+        public async Task<ActionResult<ServiceResponce<string>>> AddBillNumber(BillAddDto request)
+        {
+            return Ok(await _billService.AddBill(request));
         }
     }
 }

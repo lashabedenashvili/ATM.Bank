@@ -11,9 +11,11 @@ namespace ATM.Bank.Domein.Data.Data
     {
 
         public int Id { get; set; }
+        [Required]
         [MaxLength(25)]
         public string BillNumber { get; set; }
-        public decimal Balance { get; set; }
+        public decimal? Balance { get; set; }
+        [Required]
         public int UserId { get; set; }
         public User User { get; set; }
 

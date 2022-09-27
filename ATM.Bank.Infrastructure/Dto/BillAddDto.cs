@@ -8,7 +8,7 @@ namespace ATM.Bank.Infrastructure.Dto
 {
     public class BillAddDto
     {
-        public string personalNumber { get; set; }
+        public int UserId { get; set; }    
         public string BillNumber { get; set; }
         public decimal Balance { get; set; }
     }

@@ -10,5 +10,7 @@ namespace ATM.Bank.Aplication.Service.BillServ
     public interface IBillService
     {
         Task<ServiceResponce<string>> AddBill(BillAddDto request);
+        Task<ServiceResponce<string>> DeleteBillNumber(BillAddDto request);
+
     }
 }

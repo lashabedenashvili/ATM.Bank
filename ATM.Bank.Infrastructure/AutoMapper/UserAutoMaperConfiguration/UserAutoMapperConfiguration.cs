@@ -19,7 +19,8 @@ namespace ATM.Bank.Infrastructure.AutoMapper.UserAutoMaperConfiguration
             CreateMap<ContactInformationDto, ContactInformation>();
             CreateMap<PrivateInformationDto, PrivateInformation>();
             CreateMap<AddressDto, Address>();
-            
+            CreateMap<BillAddDto, Bill>();
+
 
             CreateMap<UpdateUserDto,User >()
             .ForAllMembers(c => c.Condition((src, dest, srcMember) => srcMember != null));
