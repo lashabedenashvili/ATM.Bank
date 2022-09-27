@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATM.Bank", "ATM.Bank\ATM.Bank.csproj", "{EC73BEF1-7A98-40A3-8415-67FF52A9CACE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATM.Bank", "ATM.Bank\ATM.Bank.csproj", "{EC73BEF1-7A98-40A3-8415-67FF52A9CACE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{8662732B-B0DE-4126-960D-7500C3867353}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATM.Bank.Domein.Data", "ATM.Bank.Domein.Data\ATM.Bank.Domein.Data.csproj", "{80714AB4-B9A1-4FEB-9B6B-F2993F2AECD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATM.Bank.Domein.Data", "ATM.Bank.Domein.Data\ATM.Bank.Domein.Data.csproj", "{80714AB4-B9A1-4FEB-9B6B-F2993F2AECD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATM.Bank.Aplication", "ATM.Bank.Aplication\ATM.Bank.Aplication.csproj", "{F90F2ED8-4CA2-46F8-A1B7-AE059FF6EE46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATM.Bank.Aplication", "ATM.Bank.Aplication\ATM.Bank.Aplication.csproj", "{F90F2ED8-4CA2-46F8-A1B7-AE059FF6EE46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATM.Bank.Infrastructure", "ATM.Bank.Infrastructure\ATM.Bank.Infrastructure.csproj", "{D6B2A108-FFD3-4D2C-BDC7-0C1198D88F05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATM.Bank.Infrastructure", "ATM.Bank.Infrastructure\ATM.Bank.Infrastructure.csproj", "{D6B2A108-FFD3-4D2C-BDC7-0C1198D88F05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

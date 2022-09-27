@@ -14,10 +14,10 @@ namespace ATM.Bank.Infrastructure.AutoMapper.UserAutoMaperConfiguration
     {
         public UserAutoMapperConfiguration()
         {
-            CreateMap<UserRegistrationDto,User>();
-            CreateMap<UserRegistrationDto, ContactInformation>();
-            CreateMap<UserRegistrationDto, PrivateInformation>();
-            CreateMap<UserRegistrationDto, Address>();
+            CreateMap<UserDto,User>();
+            CreateMap<ContactInformationDto, ContactInformation>();
+            CreateMap<PrivateInformationDto, PrivateInformation>();
+            CreateMap<AddressDto, Address>();
             
         }
     }

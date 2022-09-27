@@ -15,6 +15,7 @@ namespace ATM.Bank.Domein.Data.Domein
         public DbSet<Address> address { get; set; }
         public DbSet<ContactInformation> contactInformation { get; set; }
         public DbSet<PrivateInformation> privateInformation { get; set; }
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
 
         int SaveChanges();
     }

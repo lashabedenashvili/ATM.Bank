@@ -1,3 +1,6 @@
+using ATM.Bank.Aplication.AddressServ;
+using ATM.Bank.Aplication.ContactInformationServ;
+using ATM.Bank.Aplication.PrivateInformationServ;
 using ATM.Bank.Aplication.Service;
 using ATM.Bank.Domein.Data.Domein;
 using ATM.Bank.Infrastructure.AutoMapper;
@@ -13,8 +16,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IContext,Context>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IContext, Context>();
+builder.Services.AddScoped<IContactInformationService, ContactInformationService>();
+builder.Services.AddScoped<IPrivateInformationService, PrivateInformationService>();
+builder.Services.AddScoped<IAddressService,AddressService>();
+
 
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
