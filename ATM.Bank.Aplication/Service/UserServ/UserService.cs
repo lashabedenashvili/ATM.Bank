@@ -4,6 +4,7 @@ using ATM.Bank.Aplication.PrivateInformationServ;
 using ATM.Bank.Domein.Data.Data;
 using ATM.Bank.Domein.Data.Domein;
 using ATM.Bank.Infrastructure.Dto.UserRegistration;
+using ATM.Bank.Infrastructure.Dto.UserRegistration.UserUpdate;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +33,12 @@ namespace ATM.Bank.Aplication.Service
             _contactInformationService = contactInformationService;
             _privateInformationService = privateInformationService;
         }
+        private async Task<User> GetUser(int userId)
+        {
+            var responce=new ServiceResponce<User>();
+            responce.Data= await _context.user.FirstOrDefaultAsync(x=>x.ID==userId);
+            return responce.Data;
+        }
 
         private async Task<bool> UserExistDb(string privateNumber)
         {
@@ -54,8 +61,10 @@ namespace ATM.Bank.Aplication.Service
                 responce.Message = "User is alredy exist";
                 return responce;
             }
-
+            responce.Success = true;
+            responce.Message = "User is register";
             await _context.SaveChangesAsync();
+
             return responce;
         }
 
@@ -92,6 +101,31 @@ namespace ATM.Bank.Aplication.Service
             responce.Message = $"User Id={userId} is already deleted";
 
             return responce;
+        }
+
+        public async Task<ServiceResponce<string>> UserUpdate(UserUpdateDto request)
+        {   var responce=new ServiceResponce<string>();
+            var _user = await GetUser(request.User.Id);
+
+            if (_user != null)
+            {
+                var userId = _mapper.Map<UpdateUserDto,User>(request.User,_user);
+                _context.user.Update(userId);
+                await _addressService.UpdateAddress(request.Address, userId);
+                await _contactInformationService.UpdateContactInformation(request.ContactInformation, userId);
+                await _privateInformationService.UpdatePrivateInformation(request.PrivateInformation, userId);
+                responce.Success=true;
+                responce.Message = "User is already updated";               
+                await _context.SaveChangesAsync();
+
+            }
+            else
+            {
+                responce.Success=false;
+                responce.Message = $"User with this Id{request.User.Id} does not exist";
+            }
+            return responce;
+           
         }
     }
 }

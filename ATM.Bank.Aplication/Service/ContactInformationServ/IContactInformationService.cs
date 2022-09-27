@@ -10,6 +10,7 @@ namespace ATM.Bank.Aplication.ContactInformationServ
     {
 
         Task AddContactInformation(ContactInformationDto request, User userId);
-        
+        Task UpdateContactInformation(ContactInformationDto request, User userId);
+
     }
 }

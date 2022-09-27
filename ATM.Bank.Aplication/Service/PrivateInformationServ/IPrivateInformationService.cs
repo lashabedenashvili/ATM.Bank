@@ -6,5 +6,6 @@ namespace ATM.Bank.Aplication.PrivateInformationServ
     public interface IPrivateInformationService
     {
         Task AddPrivateInformation(PrivateInformationDto request, User userId);
+        Task UpdatePrivateInformation(PrivateInformationDto request, User userId);
     }
 }

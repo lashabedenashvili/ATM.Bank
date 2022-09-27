@@ -2,6 +2,7 @@
 using ATM.Bank.Domein.Data.Domein;
 using ATM.Bank.Infrastructure.Dto.UserRegistration;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +23,18 @@ namespace ATM.Bank.Aplication.PrivateInformationServ
         }
         public async Task AddPrivateInformation(PrivateInformationDto request, User userId)
         {
-            var addPrivateInformation= _mapper.Map<PrivateInformation>(request);
-            addPrivateInformation.User=userId;
+            var addPrivateInformation = _mapper.Map<PrivateInformation>(request);
+            addPrivateInformation.User = userId;
             await _context.privateInformation.AddAsync(addPrivateInformation);
+        }
+
+        public async Task UpdatePrivateInformation(PrivateInformationDto request, User userId)
+        {
+            var _privateInformation = await  _context.privateInformation.Where(x => x.UserId == userId.ID).FirstOrDefaultAsync();
+            var privateInformation = _mapper.Map<PrivateInformationDto,PrivateInformation>(request,_privateInformation);
+            privateInformation.User = userId;
+            _context.privateInformation.Update(privateInformation);
+            await _context.SaveChangesAsync();
         }
     }
 }

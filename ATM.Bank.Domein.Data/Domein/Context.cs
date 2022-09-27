@@ -20,8 +20,10 @@ namespace ATM.Bank.Domein.Data.Domein
         {
 
         }
-        
 
-
+        public async Task<int> SaveChangesAsync()
+        {
+           return await base.SaveChangesAsync();
+        }
     } 
 }

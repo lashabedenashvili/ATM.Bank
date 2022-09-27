@@ -2,6 +2,7 @@
 using ATM.Bank.Domein.Data.Data;
 using ATM.Bank.Infrastructure.Dto;
 using ATM.Bank.Infrastructure.Dto.UserRegistration;
+using ATM.Bank.Infrastructure.Dto.UserRegistration.UserUpdate;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +30,12 @@ namespace ATM.Bank.Controllers
         public async Task<ActionResult<ServiceResponce<string>>> UserDeleteById(int userId)
         {
             return Ok(await _userService.UserDelete(userId));
+        }
+
+        [HttpPost("UserUpdate")]
+        public async Task<ActionResult<ServiceResponce<string>>> UpdateUser(UserUpdateDto request)
+        {
+            return Ok(await _userService.UserUpdate(request));
         }
     }
 }

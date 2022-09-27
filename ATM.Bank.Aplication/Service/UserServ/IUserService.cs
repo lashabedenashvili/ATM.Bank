@@ -1,5 +1,6 @@
 ﻿using ATM.Bank.Domein.Data.Data;
 using ATM.Bank.Infrastructure.Dto.UserRegistration;
+using ATM.Bank.Infrastructure.Dto.UserRegistration.UserUpdate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace ATM.Bank.Aplication.Service
       
        Task<ServiceResponce<string>> UserRegistratiion(UserRegistrationDto request);
        Task<ServiceResponce<string>> UserDelete(int userId);
+       Task<ServiceResponce<string>> UserUpdate(UserUpdateDto request);
     }
 }
