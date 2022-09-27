@@ -24,5 +24,11 @@ namespace ATM.Bank.Controllers
         {
             return Ok(await _userService.UserRegistratiion(request));
         }
+
+        [HttpDelete("UserDeleteById")]
+        public async Task<ActionResult<ServiceResponce<string>>> UserDeleteById(int userId)
+        {
+            return Ok(await _userService.UserDelete(userId));
+        }
     }
 }

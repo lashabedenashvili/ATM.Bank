@@ -76,9 +76,22 @@ namespace ATM.Bank.Aplication.Service
             }
         }
 
+        public async Task<ServiceResponce<string>> UserDelete(int userId)
+        {
+            var responce = new ServiceResponce<string>();
+            var userDb = await _context.user.Where(x => x.ID == userId).FirstOrDefaultAsync();
+            if (userDb == null)
+            {
+                responce.Success = false;
+                responce.Message = "User does not exist";
+                return responce;
+            }
+            _context.user.Remove(userDb);
+            await _context.SaveChangesAsync();
+            responce.Success = true;
+            responce.Message = $"User Id={userId} is already deleted";
 
-
-
-
+            return responce;
+        }
     }
 }

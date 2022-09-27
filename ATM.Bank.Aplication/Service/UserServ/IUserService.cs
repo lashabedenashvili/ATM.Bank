@@ -13,5 +13,6 @@ namespace ATM.Bank.Aplication.Service
     {
       
        Task<ServiceResponce<string>> UserRegistratiion(UserRegistrationDto request);
+       Task<ServiceResponce<string>> UserDelete(int userId);
     }
 }
