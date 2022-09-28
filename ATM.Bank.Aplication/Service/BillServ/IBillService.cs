@@ -1,4 +1,5 @@
-﻿using ATM.Bank.Infrastructure.Dto;
+﻿using ATM.Bank.Domein.Data.Data;
+using ATM.Bank.Infrastructure.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace ATM.Bank.Aplication.Service.BillServ
     public interface IBillService
     {
         Task<ServiceResponce<string>> AddBill(BillAddDto request);
-        Task<ServiceResponce<string>> DeleteBillNumber(BillAddDto request);
+        Task<ServiceResponce<User>> ChargeMoney(string billNumber,decimal emountMoney);
 
     }
 }

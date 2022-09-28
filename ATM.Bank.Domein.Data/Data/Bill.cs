@@ -18,7 +18,7 @@ namespace ATM.Bank.Domein.Data.Data
         [Required]
         public int UserId { get; set; }
         public User User { get; set; }
-
+        public List<Transaction> Transaction { get; set; } = new();
     }
 }
 

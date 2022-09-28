@@ -46,5 +46,11 @@ namespace ATM.Bank.Controllers
         {
             return Ok(await _billService.AddBill(request));
         }
+
+        [HttpPost("ChargeMoney")]
+        public async Task<ActionResult<ServiceResponce<User>>> ChargeMoney(string billNumber, decimal emountMoney)
+        {
+            return Ok(await _billService.ChargeMoney(billNumber, emountMoney));
+        }
     }
 }
