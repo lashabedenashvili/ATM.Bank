@@ -45,11 +45,22 @@ namespace ATM.Bank.Aplication.Service.BillServ
             return await _context.bill.Where(x => x.BillNumber == billNumber).FirstOrDefaultAsync();
             
         }
+        private async Task TransactionDb(int billId,decimal creditEmount,decimal debitEmount)
+        {
+            var transaction = new Transaction
+            {
+                BillId = billId,
+                CreditEmount = creditEmount,
+                DebitEmount = debitEmount,
+                TransactionDate = DateTime.Now,
+            };
+           await _context.transaction.AddAsync(transaction);
+        }
 
         public async Task<ServiceResponce<User>> ChargeMoney(string billNumber,decimal emountMoney)
         {
             var responce=new ServiceResponce<User>();
-            var bill = await _context.bill.Where(x => x.BillNumber == billNumber).FirstOrDefaultAsync();
+            var bill = await GetBill(billNumber);
             if (bill == null)
             {
                 responce.Success=false;
@@ -57,18 +68,11 @@ namespace ATM.Bank.Aplication.Service.BillServ
                 return responce;
             }
             else
-            {
+            {            
                 bill.Balance += emountMoney;
                 _context.bill.Update(bill);
                 var _bill=await GetBill(billNumber);
-                var transaction = new Transaction
-                {
-                    BillId = _bill.Id,
-                    TransactionDate = DateTime.Now,
-                    DebitEmount = emountMoney,
-
-                };
-                _context.transaction.Add(transaction);
+                await TransactionDb(_bill.Id, (decimal)0, emountMoney);
                 await _context.SaveChangesAsync();
                 responce.Success= true;
                 responce.Message = $"your balance on this {billNumber} number is ${bill.Balance}";

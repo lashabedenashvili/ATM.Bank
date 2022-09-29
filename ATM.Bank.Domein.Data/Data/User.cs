@@ -23,9 +23,10 @@ namespace ATM.Bank.Domein.Data.Data
         public DateTime BirthDate { get; set; }
         [Required]
         public Gender Gender { get; set; }
-        public List<Bill> bill { get; set; } = new();
+        public List<Bill> Bill { get; set; } = new();
         public List<ContactInformation> ContactInformation { get; set; } = new();
         public List<PrivateInformation> PrivateInformation { get; set; } = new();
         public List<Address> Address { get; set; } = new();
+       
     }
 }

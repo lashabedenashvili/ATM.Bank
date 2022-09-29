@@ -30,6 +30,14 @@ namespace ATM.Bank.Infrastructure.AutoMapper.UserAutoMaperConfiguration
                 .ForAllMembers(c => c.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<AddressDto,Address>()
                 .ForAllMembers(c => c.Condition((src, dest, srcMember) => srcMember != null));
+
+
+            CreateMap<AddCardDto, Card>()
+                .ForMember(x => x.PasswordHash, c => c.Ignore())
+                .ForMember(x => x.PassworSalt, c => c.Ignore())
+                .ForMember(x => x.Id, c => c.Ignore())
+                  .ForMember(x => x.Valid, c => c.Ignore())
+                .ForSourceMember(x => x.Password, c => c.DoNotValidate());
         }
     }
 }

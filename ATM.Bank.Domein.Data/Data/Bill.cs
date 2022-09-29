@@ -17,6 +17,8 @@ namespace ATM.Bank.Domein.Data.Data
         public decimal? Balance { get; set; }
         [Required]
         public int UserId { get; set; }
+        public int? CardId { get; set; }
+        public Card Card { get; set; }
         public User User { get; set; }
         public List<Transaction> Transaction { get; set; } = new();
     }

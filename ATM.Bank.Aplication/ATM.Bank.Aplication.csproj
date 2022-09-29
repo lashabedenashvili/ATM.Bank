@@ -23,4 +23,8 @@
     <ProjectReference Include="..\ATM.Bank.Infrastructure\ATM.Bank.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Service\ATMServ\" />
+  </ItemGroup>
+
 </Project>

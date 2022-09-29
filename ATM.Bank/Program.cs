@@ -3,6 +3,7 @@ using ATM.Bank.Aplication.ContactInformationServ;
 using ATM.Bank.Aplication.PrivateInformationServ;
 using ATM.Bank.Aplication.Service;
 using ATM.Bank.Aplication.Service.BillServ;
+using ATM.Bank.Aplication.Service.CardServ;
 using ATM.Bank.Domein.Data.Domein;
 using ATM.Bank.Infrastructure.AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ builder.Services.AddScoped<IContactInformationService, ContactInformationService
 builder.Services.AddScoped<IPrivateInformationService, PrivateInformationService>();
 builder.Services.AddScoped<IAddressService,AddressService>();
 builder.Services.AddScoped<IBillService,BillService>();
+builder.Services.AddScoped<ICardService, CardService>();
 
 
 

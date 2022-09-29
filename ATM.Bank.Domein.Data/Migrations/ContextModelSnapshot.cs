@@ -64,14 +64,51 @@ namespace ATM.Bank.Domein.Data.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
+                    b.Property<int?>("CardId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CardId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("bill");
+                });
+
+            modelBuilder.Entity("ATM.Bank.Domein.Data.Data.Card", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CardNumber")
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
+
+                    b.Property<DateTime>("DateExpiry")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime>("DateIssue")
+                        .HasColumnType("date");
+
+                    b.Property<byte[]>("PassworSalt")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<bool>("Valid")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("card");
                 });
 
             modelBuilder.Entity("ATM.Bank.Domein.Data.Data.ContactInformation", b =>
@@ -155,10 +192,10 @@ namespace ATM.Bank.Domein.Data.Migrations
                     b.Property<int>("BillId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("CreditEmount")
+                    b.Property<decimal?>("CreditEmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("DebitEmount")
+                    b.Property<decimal?>("DebitEmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("TransactionDate")
@@ -213,11 +250,17 @@ namespace ATM.Bank.Domein.Data.Migrations
 
             modelBuilder.Entity("ATM.Bank.Domein.Data.Data.Bill", b =>
                 {
+                    b.HasOne("ATM.Bank.Domein.Data.Data.Card", "Card")
+                        .WithMany("Bill")
+                        .HasForeignKey("CardId");
+
                     b.HasOne("ATM.Bank.Domein.Data.Data.User", "User")
-                        .WithMany("bill")
+                        .WithMany("Bill")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Card");
 
                     b.Navigation("User");
                 });
@@ -260,15 +303,20 @@ namespace ATM.Bank.Domein.Data.Migrations
                     b.Navigation("Transaction");
                 });
 
+            modelBuilder.Entity("ATM.Bank.Domein.Data.Data.Card", b =>
+                {
+                    b.Navigation("Bill");
+                });
+
             modelBuilder.Entity("ATM.Bank.Domein.Data.Data.User", b =>
                 {
                     b.Navigation("Address");
 
+                    b.Navigation("Bill");
+
                     b.Navigation("ContactInformation");
 
                     b.Navigation("PrivateInformation");
-
-                    b.Navigation("bill");
                 });
 #pragma warning restore 612, 618
         }
