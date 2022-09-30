@@ -34,5 +34,10 @@ namespace ATM.Bank.Controllers
         {
             return Ok(await _cardService.BlockCard(cardNumber));
         }
+        [HttpPost("UnBlockCard")]
+        public async Task<ActionResult<ServiceResponce<string>>> UnBlockCard(string cardNumber)
+        {
+            return Ok(await _cardService.UnBlockCard(cardNumber));
+        }
     }
 }

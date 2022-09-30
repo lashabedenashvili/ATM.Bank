@@ -7,5 +7,7 @@ namespace ATM.Bank.Aplication.Service.CardServ
         Task<ServiceResponce<string>> AddCard(AddCardDto request);
         Task<ServiceResponce<string>> AttachedExistingCardToBillNumber(string cardNumber, string billNumber);
         Task<ServiceResponce<string>> BlockCard(string cardNumber);
+        Task<ServiceResponce<string>> UnBlockCard(string cardNumber);
+
     }
 }

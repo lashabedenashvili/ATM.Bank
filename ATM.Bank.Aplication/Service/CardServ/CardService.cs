@@ -150,5 +150,41 @@ namespace ATM.Bank.Aplication.Service.CardServ
            
             return responce;
         }
+
+        public async Task<ServiceResponce<string>> UnBlockCard(string cardNumber)
+        {
+            var responce = new ServiceResponce<string>();
+            var cardDb = await CardDb(cardNumber);
+            var blockCardDb = await BlockCardDb(cardDb.Id);
+            if (cardDb == null)
+            {
+                responce.Success = false;
+                responce.Message = "The card does not exist";
+                return responce;
+            }
+            else if (blockCardDb == null)
+            {
+                responce.Success = false;
+                responce.Message = "Card Is not Blocked";
+                return responce;
+            }
+            else
+            {
+                var insertCardBlock = new BlockCard
+                {
+                    CardId = cardDb.Id,
+                    UnBlockTime = DateTime.Now,
+                    BlockTime = null,
+                    
+                };
+                _context.blockCard.Add(insertCardBlock);
+                cardDb.Valid = true;
+                await _context.SaveChangesAsync();
+                responce.Success = true;
+                responce.Message = "The card is unblock";
+
+            }
+            return responce;
+        }
     }
 }
