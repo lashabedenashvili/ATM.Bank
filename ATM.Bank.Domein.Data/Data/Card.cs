@@ -23,6 +23,7 @@ namespace ATM.Bank.Domein.Data.Data
         public DateTime DateExpiry { get; set; }
         public bool Valid { get; set; } = false;
         public List<Bill> Bill { get; set; } = new();
+        public List<BlockCard> BlockCard { get; set; }= new();
 
     }
 }

@@ -17,6 +17,7 @@ namespace ATM.Bank.Domein.Data.Domein
         public DbSet<PrivateInformation> privateInformation { get; set ; }
         public DbSet<Transaction> transaction { get; set ; }
         public DbSet<Card> card { get; set; }
+        public DbSet<BlockCard> blockCard { get; set ; }
 
         public Context(DbContextOptions<Context> options) : base(options)
         {

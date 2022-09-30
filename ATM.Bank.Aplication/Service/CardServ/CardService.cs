@@ -46,6 +46,10 @@ namespace ATM.Bank.Aplication.Service.CardServ
         {
             return await _context.card.Where(x=>x.CardNumber== cardNumber).FirstOrDefaultAsync();   
         }
+        private async Task<BlockCard> BlockCardDb(int cardId)
+        {
+            return await _context.blockCard.Where(x=>x.Id==cardId).FirstOrDefaultAsync();
+        }
         public async Task<ServiceResponce<string>> AddCard(AddCardDto request)
         {
             var responce=new ServiceResponce<string>();
@@ -106,6 +110,44 @@ namespace ATM.Bank.Aplication.Service.CardServ
                 responce.Message = "card is attached on the bill";
 
             }
+            return responce;
+        }
+
+        public async Task<ServiceResponce<string>> BlockCard(string cardNumber)
+        {
+            var responce=new ServiceResponce<string>();
+            var cardDb = await CardDb(cardNumber);
+            var blockCardDb = await BlockCardDb(cardDb.Id);
+            if (cardDb == null)
+            {
+                responce.Success = false;
+                responce.Message = "The card does not exist";
+                return responce;
+            }
+            else if (blockCardDb == null)
+            {
+                
+                    var inserBlockCard = new BlockCard
+                    {
+                        CardId = cardDb.Id,
+                        BlockTime = DateTime.Now,
+                        UnBlockTime = null,
+                    };
+                    cardDb.Valid = false;
+                    _context.blockCard.Add(inserBlockCard);
+                    await _context.SaveChangesAsync();
+                    responce.Success = true;
+                    responce.Message = "The card is Blocked";
+                
+            }
+           
+            else if ( blockCardDb.CardId == cardDb.Id)
+            {
+                responce.Success = false;
+                responce.Message = "The card is alredy blocked";
+                return responce;
+            }
+           
             return responce;
         }
     }
