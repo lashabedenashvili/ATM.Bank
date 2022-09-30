@@ -50,6 +50,7 @@ namespace ATM.Bank.Aplication.Service.CardServ
         {
             var responce=new ServiceResponce<string>();
             var billDb= await BillDb(request.BillNumber);
+
             if (billDb == null)
             {
                 responce.Success = false;
@@ -71,6 +72,40 @@ namespace ATM.Bank.Aplication.Service.CardServ
 
             }
           
+            return responce;
+        }
+
+        public async Task<ServiceResponce<string>> AttachedExistingCardToBillNumber(string cardNumber, string billNumber)
+        {
+            var responce = new ServiceResponce<string>();
+            var cardDb = await CardDb(cardNumber);
+            var billDb=await BillDb(billNumber);
+            if(billDb == null)
+            {
+                responce.Success = false;
+                responce.Message = "bill number does not exist";
+                return responce;
+            }
+            else if ( billDb.CardId != null)
+            {
+                responce.Success = false;
+                responce.Message = "another Card is alredy attached on this bill";
+                return responce;
+            }
+            else if (cardDb == null)
+            {
+                responce.Success=false;
+                responce.Message = "This Card does not exist";
+                return responce;
+            }
+            else
+            {
+                billDb.CardId = cardDb.Id;
+                await _context.SaveChangesAsync();
+                responce.Success=true;
+                responce.Message = "card is attached on the bill";
+
+            }
             return responce;
         }
     }

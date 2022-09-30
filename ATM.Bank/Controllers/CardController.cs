@@ -23,5 +23,10 @@ namespace ATM.Bank.Controllers
         {
             return Ok(await _cardService.AddCard(request));
         }
+        [HttpPost("AttachedExistingCardToBillNumber")]
+        public async Task<ActionResult<ServiceResponce<string>>> AttachedExistingCardToBillNumber(string cardNumber, string billNumber)
+        {
+            return Ok(await _cardService.AttachedExistingCardToBillNumber(cardNumber, billNumber));
+        }
     }
 }
