@@ -186,5 +186,25 @@ namespace ATM.Bank.Aplication.Service.CardServ
             }
             return responce;
         }
+
+        public async Task<ServiceResponce<string>> CardDataExpiryCheck(string cardNuber)
+        {
+            var responce=new ServiceResponce<string>(); 
+            var cardDb= await CardDb(cardNuber);
+            if (cardDb == null)
+            {
+                responce.Success = false;
+                responce.Message = "The card does not exist";
+                return responce;
+            }
+            else if (cardDb.DateExpiry <= DateTime.Now)
+            {
+                cardDb.Valid=false;
+                responce.Message = "The card has expired";
+                responce.Success = false;
+                await _context.SaveChangesAsync();
+            }
+            return responce;
+        }
     }
 }
