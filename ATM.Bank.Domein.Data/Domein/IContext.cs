@@ -18,6 +18,7 @@ namespace ATM.Bank.Domein.Data.Domein
         public DbSet<Transaction> transaction { get; set; }
         public DbSet<Card> card { get; set; }
         public DbSet<BlockCard> blockCard { get; set; }
+        public DbSet<LoggTime> LoggTime { get; set; }
         Task<int> SaveChangesAsync();
 
         int SaveChanges();

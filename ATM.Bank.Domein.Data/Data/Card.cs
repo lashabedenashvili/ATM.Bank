@@ -24,6 +24,7 @@ namespace ATM.Bank.Domein.Data.Data
         public bool Valid { get; set; } = false;
         public List<Bill> Bill { get; set; } = new();
         public List<BlockCard> BlockCard { get; set; }= new();
+        public List<LoggTime> LoggTime { get; set; } = new();
 
     }
 }

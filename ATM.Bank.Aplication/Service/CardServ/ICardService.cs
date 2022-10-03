@@ -1,4 +1,5 @@
-﻿using ATM.Bank.Infrastructure.Dto;
+﻿using ATM.Bank.Domein.Data.Data;
+using ATM.Bank.Infrastructure.Dto;
 
 namespace ATM.Bank.Aplication.Service.CardServ
 {
@@ -9,5 +10,7 @@ namespace ATM.Bank.Aplication.Service.CardServ
         Task<ServiceResponce<string>> BlockCard(string cardNumber);
         Task<ServiceResponce<string>> UnBlockCard(string cardNumber);
         Task<ServiceResponce<string>> CardDataExpiryCheck(string cardNuber);
+        Task<Card> CardDb(string cardNumber);
+       
     }
 }

@@ -42,7 +42,7 @@ namespace ATM.Bank.Aplication.Service.CardServ
             return await _context.bill.Where(x => x.BillNumber == billNumber).FirstOrDefaultAsync();
         }
 
-        private async Task<Card>CardDb(string cardNumber)
+        public async Task<Card>CardDb(string cardNumber)
         {
             return await _context.card.Where(x=>x.CardNumber== cardNumber).FirstOrDefaultAsync();   
         }
