@@ -1,4 +1,5 @@
-﻿using ATM.Bank.Domein.Data.Data;
+﻿using ATM.Bank.Aplication.Service.ATMServ;
+using ATM.Bank.Domein.Data.Data;
 using ATM.Bank.Domein.Data.Domein;
 using ATM.Bank.Infrastructure.Dto;
 using AutoMapper;
@@ -15,11 +16,13 @@ namespace ATM.Bank.Aplication.Service.CardServ
     {
         private readonly IMapper _mapper;
         private readonly IContext _context;
+        private readonly IATMService _atmService;
 
         public CardService(IMapper mapper,IContext context)
         {
             _mapper = mapper;
             _context = context;
+           
         }
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
@@ -29,7 +32,8 @@ namespace ATM.Bank.Aplication.Service.CardServ
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
         }
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+
+        public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
             {
@@ -37,6 +41,37 @@ namespace ATM.Bank.Aplication.Service.CardServ
                 return computeHash.SequenceEqual(passwordHash);
             }
         }
+
+        public async Task<ServiceResponce<string>>ChangeCardPassword(string cardNumber,string oldPassword,string newPassword)
+        {
+            var responce=new ServiceResponce<string>();
+            var cardDb = await CardDb(cardNumber);
+            if (cardDb == null)
+            {
+                responce.Success=false;
+                responce.Message = "The card number is not correct";
+                return responce;
+            }
+
+            var verifuPasswordHash = VerifyPasswordHash(oldPassword, cardDb.PasswordHash, cardDb.PassworSalt);
+            if (!verifuPasswordHash)
+            {
+                responce.Success = false;
+                responce.Message = "The old password is not correct";
+                return responce;
+            }
+            else
+            {
+                CreatePasswordHash(newPassword, out byte[] PasswordHash, out byte[] PassworSalt);
+                cardDb.PasswordHash = PasswordHash;
+                cardDb.PassworSalt = PassworSalt;
+                await _context.SaveChangesAsync();
+                responce.Success=true;
+                responce.Message = "The password is updated";
+            }
+            return responce;
+        }
+     
         private async Task<Bill> BillDb(string billNumber)
         {
             return await _context.bill.Where(x => x.BillNumber == billNumber).FirstOrDefaultAsync();
