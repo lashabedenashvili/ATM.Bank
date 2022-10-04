@@ -3,6 +3,7 @@ using ATM.Bank.Domein.Data.Data;
 using ATM.Bank.Infrastructure.Dto;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using ATM.Bank.Aplication.Service.CardServ;
 
 namespace ATM.Bank.Aplication.Service.BillServ
 {
@@ -12,12 +13,14 @@ namespace ATM.Bank.Aplication.Service.BillServ
         private readonly IContext _context;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly ICardService _cardService;
 
-        public BillService(IContext context,IUserService userService,IMapper mapper)
+        public BillService(IContext context,IUserService userService,IMapper mapper,ICardService cardService)
         {
            _context = context;
            _userService = userService;
            _mapper = mapper;
+           _cardService = cardService;
         }
 
         private async Task<bool>BillNumberExist(string billNumber)
@@ -45,6 +48,10 @@ namespace ATM.Bank.Aplication.Service.BillServ
             return await _context.bill.Where(x => x.BillNumber == billNumber).FirstOrDefaultAsync();
             
         }
+        private async Task<Bill>GetBillByCardId(int cardId)
+        {
+            return await _context.bill.Where(x => x.CardId == cardId).FirstOrDefaultAsync();
+        }
         private async Task TransactionDb(int billId,decimal creditEmount,decimal debitEmount)
         {
             var transaction = new Transaction
@@ -55,6 +62,39 @@ namespace ATM.Bank.Aplication.Service.BillServ
                 TransactionDate = DateTime.Now,
             };
            await _context.transaction.AddAsync(transaction);
+        }
+        public async Task<ServiceResponce<decimal>> WithdrawMoney(string cardNumber, decimal emountMoney)
+        {
+            var responce=new ServiceResponce<decimal>();
+            var cardDb=await _cardService.CardDb(cardNumber);
+            var billDb = await GetBillByCardId(cardDb.Id);
+            if (cardDb == null)
+            {
+                responce.Success = false;
+                responce.Message = "The card does not exist";
+                return responce;
+            }
+            else if (!cardDb.Valid)
+            {
+                responce.Success = false;
+                responce.Message = "The card is blocked";
+                return responce;
+            }
+            else if (emountMoney> billDb.Balance)
+            {
+                responce.Success = false;
+                responce.Message = $"You have not enought balance. your balance is ${billDb.Balance}";
+                return responce;
+            }
+            else
+            {
+                billDb.Balance -= emountMoney;
+                responce.Success = true;
+                await TransactionDb(billDb.Id, emountMoney,0);
+                await _context.SaveChangesAsync();
+            }
+
+            return responce;
         }
 
         public async Task<ServiceResponce<User>> ChargeMoney(string billNumber,decimal emountMoney)

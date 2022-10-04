@@ -12,6 +12,7 @@ namespace ATM.Bank.Aplication.Service.BillServ
     {
         Task<ServiceResponce<string>> AddBill(BillAddDto request);
         Task<ServiceResponce<User>> ChargeMoney(string billNumber,decimal emountMoney);
+        Task<ServiceResponce<decimal>> WithdrawMoney(string cardNumber, decimal emountMoney);
 
     }
 }

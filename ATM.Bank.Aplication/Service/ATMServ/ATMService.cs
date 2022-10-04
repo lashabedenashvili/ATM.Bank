@@ -1,4 +1,5 @@
-﻿using ATM.Bank.Aplication.Service.CardServ;
+﻿using ATM.Bank.Aplication.Service.BillServ;
+using ATM.Bank.Aplication.Service.CardServ;
 using ATM.Bank.Aplication.Service.LoggTimeServ;
 using ATM.Bank.Domein.Data.Data;
 using ATM.Bank.Domein.Data.Domein;
@@ -16,17 +17,20 @@ namespace ATM.Bank.Aplication.Service.ATMServ
         private readonly IContext _context;
         private readonly ICardService _cardService;
         private readonly ILoggTimeService _loggTime;
+        private readonly IBillService _billService;
 
         public ATMService
             (
             IContext context,
             ICardService cardService,
-            ILoggTimeService loggTime
+            ILoggTimeService loggTime,
+            IBillService billService
             )
         {
             _context = context;
             _cardService = cardService;
             _loggTime = loggTime;
+            _billService = billService;
         }
         
 
@@ -87,6 +91,11 @@ namespace ATM.Bank.Aplication.Service.ATMServ
         {
             var cardDb = await _cardService.CardDb(cardNumber);
             return await _context.bill.Where(x => x.CardId == cardDb.Id).FirstOrDefaultAsync();
+        }
+
+        public async Task<ServiceResponce<decimal>> WithdrawMoneyAtm(string cardNumber, decimal emountMoney)
+        {
+            return await _billService.WithdrawMoney(cardNumber, emountMoney);
         }
     }
 }

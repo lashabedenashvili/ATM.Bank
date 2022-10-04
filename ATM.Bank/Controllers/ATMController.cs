@@ -28,5 +28,10 @@ namespace ATM.Bank.Controllers
             return Ok(await _atmService.ChangePassword(cardNumber, oldPassword, newPassword));
         }
 
+        [HttpPost("WithdrawMoneyAtm")]
+        public async Task<ActionResult<ServiceResponce<decimal>>> WithdrawMoneyAtm(string cardNumber, decimal emountMoney)
+        {
+            return Ok(await _atmService.WithdrawMoneyAtm(cardNumber, emountMoney));
+        }
     }
 }

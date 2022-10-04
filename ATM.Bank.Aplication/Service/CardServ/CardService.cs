@@ -16,7 +16,7 @@ namespace ATM.Bank.Aplication.Service.CardServ
     {
         private readonly IMapper _mapper;
         private readonly IContext _context;
-        private readonly IATMService _atmService;
+        
 
         public CardService(IMapper mapper,IContext context)
         {
