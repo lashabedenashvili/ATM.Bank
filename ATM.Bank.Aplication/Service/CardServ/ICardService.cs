@@ -12,6 +12,8 @@ namespace ATM.Bank.Aplication.Service.CardServ
         Task<ServiceResponce<string>> CardDataExpiryCheck(string cardNuber);
         Task<Card> CardDb(string cardNumber);
         Task<ServiceResponce<string>> ChangeCardPassword(string cardNumber, string oldPassword, string newPassword);
+        Task<int> PasswordTryCount(string cardNumber);
+        Task PasswordTryCountReset(string cardNumber);
 
 
     }

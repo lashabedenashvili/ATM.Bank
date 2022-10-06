@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ATM.Bank.Aplication.Service.ATMServ
 {
-    public class ATMService:IATMService
+    public class ATMService : IATMService
     {
         private readonly IContext _context;
         private readonly ICardService _cardService;
@@ -32,9 +32,9 @@ namespace ATM.Bank.Aplication.Service.ATMServ
             _loggTime = loggTime;
             _billService = billService;
         }
-        
 
-        public async Task<ServiceResponce<string>> ChangePassword(string cardNumber, string oldPassword,string newPassword)
+
+        public async Task<ServiceResponce<string>> ChangePassword(string cardNumber, string oldPassword, string newPassword)
         {
             return await _cardService.ChangeCardPassword(cardNumber, oldPassword, newPassword);
 
@@ -47,11 +47,13 @@ namespace ATM.Bank.Aplication.Service.ATMServ
                 return computeHash.SequenceEqual(passwordHash);
             }
         }
-        public async Task<ServiceResponce<decimal>>LoggInATM(string cardNumber, string password)
+        public async Task<ServiceResponce<decimal>> LoggInATM(string cardNumber, string password)
         {
-           var responce=new ServiceResponce<decimal>();
-           
-           var cardDb= await _cardService.CardDb(cardNumber);
+            var responce = new ServiceResponce<decimal>();
+
+
+
+            var cardDb = await _cardService.CardDb(cardNumber);
             if (cardDb == null)
             {
                 responce.Success = false;
@@ -59,35 +61,49 @@ namespace ATM.Bank.Aplication.Service.ATMServ
                 return responce;
             }
 
-            var verifyPasswordDb= VerifyPasswordHash( password, cardDb.PasswordHash, cardDb.PassworSalt);
-            
+
+            var verifyPasswordDb = VerifyPasswordHash(password, cardDb.PasswordHash, cardDb.PassworSalt);
+
             if (!cardDb.Valid)
             {
-                responce.Success=false;
+                responce.Success = false;
                 responce.Message = "The card is blocked or expired";
                 return responce;
             }
+
             else if (!verifyPasswordDb)
             {
                 responce.Success = false;
                 responce.Message = "The password is not correct";
-                return responce;
+                var passwordCount = await _cardService.PasswordTryCount(cardNumber);
+                if (passwordCount>2)
+                {
+                    var blockCard=await _cardService.BlockCard(cardNumber);
+                    responce.Message = blockCard.Message;
+                    return responce;
+                }
+
             }
             else
             {
                 var billDb = await GetBillDb(cardNumber);
                 await _loggTime.LoggIn(cardNumber);
-                responce.Success=true;
-                responce.Message = $"Your Balance is $ {billDb.Balance}";            
-                
-               
-
-
+                responce.Success = true;
+                responce.Message = $"Your Balance is $ {billDb.Balance}";
+                await _cardService.PasswordTryCountReset(cardNumber);
             }
+
+
+
+
+
+
+
+
             return responce;
-            
+
         }
-        private async Task<Bill>GetBillDb(string cardNumber)
+        private async Task<Bill> GetBillDb(string cardNumber)
         {
             var cardDb = await _cardService.CardDb(cardNumber);
             return await _context.bill.Where(x => x.CardId == cardDb.Id).FirstOrDefaultAsync();

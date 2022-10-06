@@ -21,6 +21,7 @@ namespace ATM.Bank.Domein.Data.Data
         [Required]
         [Column(TypeName = "date")]
         public DateTime DateExpiry { get; set; }
+        public int PasswordTryCount { get; set; } = 0;
         public bool Valid { get; set; } = false;
         public List<Bill> Bill { get; set; } = new();
         public List<BlockCard> BlockCard { get; set; }= new();

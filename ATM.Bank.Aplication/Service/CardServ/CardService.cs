@@ -76,14 +76,28 @@ namespace ATM.Bank.Aplication.Service.CardServ
         {
             return await _context.bill.Where(x => x.BillNumber == billNumber).FirstOrDefaultAsync();
         }
+      
+        
+        
 
         public async Task<Card>CardDb(string cardNumber)
         {
             return await _context.card.Where(x=>x.CardNumber== cardNumber).FirstOrDefaultAsync();   
         }
+        public async Task<BlockCard> BlockCardLastRecord(int cardId)
+        {
+           
+                var ll=await _context.blockCard
+                .Where(m => m.CardId == cardId)
+                .OrderByDescending(m => m.BlockTime)
+                .LastOrDefaultAsync();
+
+            return ll;
+        }
+
         private async Task<BlockCard> BlockCardDb(int cardId)
         {
-            return await _context.blockCard.Where(x=>x.Id==cardId).FirstOrDefaultAsync();
+            return await _context.blockCard.Where(x=>x.CardId==cardId).FirstOrDefaultAsync();
         }
         public async Task<ServiceResponce<string>> AddCard(AddCardDto request)
         {
@@ -143,7 +157,6 @@ namespace ATM.Bank.Aplication.Service.CardServ
                 await _context.SaveChangesAsync();
                 responce.Success=true;
                 responce.Message = "card is attached on the bill";
-
             }
             return responce;
         }
@@ -151,15 +164,15 @@ namespace ATM.Bank.Aplication.Service.CardServ
         public async Task<ServiceResponce<string>> BlockCard(string cardNumber)
         {
             var responce=new ServiceResponce<string>();
-            var cardDb = await CardDb(cardNumber);
-            var blockCardDb = await BlockCardDb(cardDb.Id);
+            var cardDb = await CardDb(cardNumber);           
+            var cardDbDescending = await BlockCardLastRecord(cardDb.Id);
             if (cardDb == null)
             {
                 responce.Success = false;
                 responce.Message = "The card does not exist";
                 return responce;
             }
-            else if (blockCardDb == null)
+            else if (cardDbDescending.BlockTime == null)
             {
                 
                     var inserBlockCard = new BlockCard
@@ -176,7 +189,7 @@ namespace ATM.Bank.Aplication.Service.CardServ
                 
             }
            
-            else if ( blockCardDb.CardId == cardDb.Id)
+            else
             {
                 responce.Success = false;
                 responce.Message = "The card is alredy blocked";
@@ -240,6 +253,21 @@ namespace ATM.Bank.Aplication.Service.CardServ
                 await _context.SaveChangesAsync();
             }
             return responce;
+        }
+        public async Task<int> PasswordTryCount(string cardNumber)
+        {        
+            
+            var tryCount = await CardDb(cardNumber);
+            tryCount.PasswordTryCount += 1;
+            await _context.SaveChangesAsync();
+            return  tryCount.PasswordTryCount;
+            
+        }
+        public async Task PasswordTryCountReset(string cardNumber)
+        {
+            var tryCountDb = await CardDb(cardNumber);
+            tryCountDb.PasswordTryCount = 0;
+            await _context.SaveChangesAsync();
         }
     }
 }
