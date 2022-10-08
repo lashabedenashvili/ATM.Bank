@@ -75,11 +75,7 @@ namespace ATM.Bank.Aplication.Service.CardServ
         private async Task<Bill> BillDb(string billNumber)
         {
             return await _context.bill.Where(x => x.BillNumber == billNumber).FirstOrDefaultAsync();
-        }
-      
-        
-        
-
+        }    
         public async Task<Card>CardDb(string cardNumber)
         {
             return await _context.card.Where(x=>x.CardNumber== cardNumber).FirstOrDefaultAsync();   
@@ -227,6 +223,7 @@ namespace ATM.Bank.Aplication.Service.CardServ
                 };
                 _context.blockCard.Add(insertCardBlock);
                 cardDb.Valid = true;
+                cardDb.PasswordTryCount = 0;
                 await _context.SaveChangesAsync();
                 responce.Success = true;
                 responce.Message = "The card is unblock";

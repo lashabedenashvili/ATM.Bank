@@ -1,10 +1,13 @@
 ﻿using ATM.Bank.Aplication.Service;
 using ATM.Bank.Aplication.Service.ATMServ;
 using ATM.Bank.Domein.Data.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ATM.Bank.Controllers
 {
+    [Authorize]   
     [ApiController]
     [Route("api/[controller]")]
 
@@ -16,12 +19,11 @@ namespace ATM.Bank.Controllers
         {
             _atmService = atmService;
         }
-
+        [AllowAnonymous]
         [HttpPost("LoggInATM")]
-        public async Task<ActionResult<ServiceResponce<decimal>>> LoggInATM(string cardNumber, string password)
-        {
-            return Ok(await _atmService.LoggInATM(cardNumber, password));
-        }
+        public async Task<ActionResult<ServiceResponce<string>>> LoggInATM(string cardNumber, string password)
+            => Ok(await _atmService.LoggInATM(cardNumber, password));
+      
         [HttpPost("ChangePassword")]
         public async Task<ActionResult<ServiceResponce<string>>> ChangePassword(string cardNumber, string oldPassword, string newPassword)
         {
@@ -29,8 +31,9 @@ namespace ATM.Bank.Controllers
         }
 
         [HttpPost("WithdrawMoneyAtm")]
-        public async Task<ActionResult<ServiceResponce<decimal>>> WithdrawMoneyAtm(string cardNumber, decimal emountMoney)
+        public async Task<ActionResult<ServiceResponce<decimal>>> WithdrawMoneyAtm( decimal emountMoney)
         {
+            string cardNumber = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             return Ok(await _atmService.WithdrawMoneyAtm(cardNumber, emountMoney));
         }
     }

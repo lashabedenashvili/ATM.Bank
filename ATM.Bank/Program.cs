@@ -8,7 +8,11 @@ using ATM.Bank.Aplication.Service.CardServ;
 using ATM.Bank.Aplication.Service.LoggTimeServ;
 using ATM.Bank.Domein.Data.Domein;
 using ATM.Bank.Infrastructure.AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Filters;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +23,17 @@ builder.Services.AddDbContext<Context>(options => options
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(x => {
+    x.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+     Description="Standard Authorization header using  Bearer scheme, e.g. \"bearar{ token}\"",
+     In=ParameterLocation.Header,
+     Name="Autorization",
+     Type=SecuritySchemeType.ApiKey
+    });
+
+    x.OperationFilter<SecurityRequirementsOperationFilter>();
+});
 builder.Services.AddScoped<IContext,Context>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IContactInformationService, ContactInformationService>();
@@ -29,6 +43,18 @@ builder.Services.AddScoped<IBillService,BillService>();
 builder.Services.AddScoped<ICardService, CardService>();
 builder.Services.AddScoped<ILoggTimeService, LoggTimeService>();
 builder.Services.AddScoped<IATMService, ATMService>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey=true,
+            IssuerSigningKey=new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration
+            .GetSection("AppSettings:Token").Value)),
+            ValidateIssuer=false,
+            ValidateAudience=false,
+        };
+    });
 
 
 
@@ -46,6 +72,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

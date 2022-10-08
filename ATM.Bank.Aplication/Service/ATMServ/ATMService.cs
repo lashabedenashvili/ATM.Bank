@@ -4,9 +4,13 @@ using ATM.Bank.Aplication.Service.LoggTimeServ;
 using ATM.Bank.Domein.Data.Data;
 using ATM.Bank.Domein.Data.Domein;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,19 +22,22 @@ namespace ATM.Bank.Aplication.Service.ATMServ
         private readonly ICardService _cardService;
         private readonly ILoggTimeService _loggTime;
         private readonly IBillService _billService;
+        private readonly IConfiguration _configuration;
 
         public ATMService
             (
             IContext context,
             ICardService cardService,
             ILoggTimeService loggTime,
-            IBillService billService
+            IBillService billService,
+            IConfiguration configuration
             )
         {
             _context = context;
             _cardService = cardService;
             _loggTime = loggTime;
             _billService = billService;
+            _configuration = configuration;
         }
 
 
@@ -47,11 +54,10 @@ namespace ATM.Bank.Aplication.Service.ATMServ
                 return computeHash.SequenceEqual(passwordHash);
             }
         }
-        public async Task<ServiceResponce<decimal>> LoggInATM(string cardNumber, string password)
+        public async Task<ServiceResponce<string>> LoggInATM(string cardNumber, string password)
         {
-            var responce = new ServiceResponce<decimal>();
-
-
+            var responce = new ServiceResponce<string>();
+            
 
             var cardDb = await _cardService.CardDb(cardNumber);
             if (cardDb == null)
@@ -76,13 +82,12 @@ namespace ATM.Bank.Aplication.Service.ATMServ
                 responce.Success = false;
                 responce.Message = "The password is not correct";
                 var passwordCount = await _cardService.PasswordTryCount(cardNumber);
-                if (passwordCount>2)
+                if (passwordCount > 2)
                 {
-                    var blockCard=await _cardService.BlockCard(cardNumber);
+                    var blockCard = await _cardService.BlockCard(cardNumber);
                     responce.Message = blockCard.Message;
                     return responce;
                 }
-
             }
             else
             {
@@ -90,16 +95,9 @@ namespace ATM.Bank.Aplication.Service.ATMServ
                 await _loggTime.LoggIn(cardNumber);
                 responce.Success = true;
                 responce.Message = $"Your Balance is $ {billDb.Balance}";
-                await _cardService.PasswordTryCountReset(cardNumber);
+                await _cardService.PasswordTryCountReset(cardNumber);                
+                responce.Data = CreateToken(cardDb);
             }
-
-
-
-
-
-
-
-
             return responce;
 
         }
@@ -113,5 +111,26 @@ namespace ATM.Bank.Aplication.Service.ATMServ
         {
             return await _billService.WithdrawMoney(cardNumber, emountMoney);
         }
+        private string CreateToken(Card card)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier,card.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier,card.CardNumber.ToString())
+            };
+            SymmetricSecurityKey key = new SymmetricSecurityKey(System.Text.Encoding.UTF8
+                .GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+            SigningCredentials cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires=DateTime.Now.AddDays(1),
+                SigningCredentials = cred
+            };
+            JwtSecurityTokenHandler tokenHendler=new JwtSecurityTokenHandler();
+            SecurityToken token = tokenHendler.CreateToken(tokenDescriptor);
+
+            return tokenHendler.WriteToken(token);
+        } 
     }
 }

@@ -13,13 +13,13 @@ namespace ATM.Bank.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IMapper _mapper;
+       
         private readonly IUserService _userService;
         private readonly IBillService _billService;
 
-        public UserController(IMapper mapper, IUserService userService,IBillService billService)
+        public UserController(IUserService userService,IBillService billService)
         {
-            _mapper = mapper;
+           
             _userService = userService;
             _billService = billService;
         }
