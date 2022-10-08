@@ -33,7 +33,7 @@ namespace ATM.Bank.Controllers
         [HttpPost("WithdrawMoneyAtm")]
         public async Task<ActionResult<ServiceResponce<decimal>>> WithdrawMoneyAtm( decimal emountMoney)
         {
-            string cardNumber = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            string cardNumber = User.Claims.FirstOrDefault(x => x.Type == "CardNumber").Value;
             return Ok(await _atmService.WithdrawMoneyAtm(cardNumber, emountMoney));
         }
     }

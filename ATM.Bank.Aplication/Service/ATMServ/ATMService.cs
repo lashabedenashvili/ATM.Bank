@@ -116,7 +116,7 @@ namespace ATM.Bank.Aplication.Service.ATMServ
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier,card.Id.ToString()),
-                new Claim(ClaimTypes.NameIdentifier,card.CardNumber.ToString())
+                new Claim("CardNumber",card.CardNumber.ToString())
             };
             SymmetricSecurityKey key = new SymmetricSecurityKey(System.Text.Encoding.UTF8
                 .GetBytes(_configuration.GetSection("AppSettings:Token").Value));
